@@ -51,7 +51,7 @@ class PlaceFragment : Fragment() {
                 viewModel.placeList.addAll(places)
                 adapter.notifyDataSetChanged()
             } else {
-                Toast.makeText(activity, "未能查询到任何地点", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, R.string.search_places_empty, Toast.LENGTH_SHORT).show()
                 result.exceptionOrNull()?.printStackTrace()
             }
         })

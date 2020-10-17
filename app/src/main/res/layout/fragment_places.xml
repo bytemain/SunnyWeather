@@ -22,7 +22,8 @@
             android:hint="@string/hint_search_places"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textColorHint="@color/white_dimmer"/>
     </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
