@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_places.*
 import me.lengthmin.sunnyweather.R
 
@@ -31,7 +33,9 @@ class PlaceFragment : Fragment() {
         recyclerView.layoutManager = layoutManager
         adapter = PlaceAdapter(this, viewModel.placeList)
         recyclerView.adapter = adapter
-
+        activity?.findViewById<FloatingActionButton>(R.id.fabRefresh)?.setOnClickListener { view ->
+            Snackbar.make(view, "正在刷新~", Snackbar.LENGTH_SHORT).show()
+        }
         searchPlaceEdit.addTextChangedListener { text: Editable? ->
             val content = text.toString()
             if (content.isNotEmpty()) {

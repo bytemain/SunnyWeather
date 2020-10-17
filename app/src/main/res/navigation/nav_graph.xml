@@ -6,6 +6,7 @@
     app:startDestination="@id/placeFragment">
     <fragment
         android:id="@+id/placeFragment"
-        android:name="me.lengthmin.sunnyweather.ui.place.PlaceFragment" />
+        android:name="me.lengthmin.sunnyweather.ui.place.PlaceFragment"
+        tools:layout="@layout/fragment_places" />
 
 </navigation>
