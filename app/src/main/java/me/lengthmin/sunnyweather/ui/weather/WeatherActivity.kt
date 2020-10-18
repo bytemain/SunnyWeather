@@ -4,10 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
@@ -67,6 +71,28 @@ class WeatherActivity : AppCompatActivity() {
         swipeRefresh.setOnRefreshListener {
             refreshWeather()
         }
+
+        btnCityManage.setOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.END)
+        }
+        drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+            }
+
+            override fun onDrawerOpened(drawerView: View) {
+            }
+
+            override fun onDrawerClosed(drawerView: View) {
+                val manager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                manager.hideSoftInputFromWindow(
+                    drawerView.windowToken,
+                    InputMethodManager.HIDE_NOT_ALWAYS
+                )
+            }
+
+            override fun onDrawerStateChanged(newState: Int) {
+            }
+        })
     }
 
     fun refreshWeather() {
@@ -79,7 +105,7 @@ class WeatherActivity : AppCompatActivity() {
         val realtime = weather.realtime
         val daily = weather.daily
         // fill now.xml
-        val curTempText = "${realtime.temperature.toInt()} °C"
+        val curTempText = "${realtime.temperature}°C"
         currentTemp.text = curTempText
         currentSky.text = getSky(realtime.skycon).info
         val curPM25Text = "PM2.5指数：${realtime.airQuality.aqi.chn}"
@@ -87,7 +113,7 @@ class WeatherActivity : AppCompatActivity() {
         // nowLayout.setBackgroundColor()
         // fill forecast.xml
         forecastLayout.removeAllViews()
-        for (i in 0 until daily.skycon.size) {
+        for (i in daily.skycon.indices) {
             val skycon = daily.skycon[i]
             val temperature = daily.temperature[i]
             val view =
@@ -101,7 +127,7 @@ class WeatherActivity : AppCompatActivity() {
             dateInfo.text = simpleDateFormat.format(skycon.date)
             // skyIcon.setImageResource()
             skyInfo.text = sky.info
-            val tempText = "${temperature.min} ~ ${temperature.max} °C"
+            val tempText = "${temperature.min}/${temperature.max}°C"
             temperatureInfo.text = tempText
             forecastLayout.addView(view)
         }

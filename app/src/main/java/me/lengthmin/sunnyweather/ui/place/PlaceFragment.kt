@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_places.*
+import me.lengthmin.sunnyweather.MainActivity
 import me.lengthmin.sunnyweather.R
 import me.lengthmin.sunnyweather.model.PlaceResponse
 import me.lengthmin.sunnyweather.ui.weather.WeatherActivity
@@ -32,7 +33,7 @@ class PlaceFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (viewModel.isPlaceSaved()) {
+        if (activity is MainActivity && viewModel.isPlaceSaved()) {
             val place = viewModel.getSavedPlace()
             WeatherActivity.actionStart(
                 requireContext(),

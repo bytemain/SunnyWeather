@@ -25,4 +25,10 @@ class WeatherViewModel : ViewModel() {
     fun refreshWeather() {
         locationLiveData.value = Location(lng = this.locationLng, lat = this.locationLat)
     }
+
+    fun setData(place: PlaceResponse.Place) {
+        this.locationLng = place.location.lng
+        this.locationLat = place.location.lat
+        this.placeName = place.name
+    }
 }
