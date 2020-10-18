@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import me.lengthmin.sunnyweather.model.Location
+import me.lengthmin.sunnyweather.model.PlaceResponse
 import me.lengthmin.sunnyweather.repository.Repository
 
 class WeatherViewModel : ViewModel() {

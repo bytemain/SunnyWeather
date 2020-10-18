@@ -4,6 +4,8 @@ import androidx.lifecycle.liveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import me.lengthmin.sunnyweather.dao.PlaceDao
+import me.lengthmin.sunnyweather.model.PlaceResponse
 import me.lengthmin.sunnyweather.model.Weather
 import me.lengthmin.sunnyweather.network.Network
 import java.lang.Exception
@@ -11,6 +13,27 @@ import java.lang.RuntimeException
 import kotlin.coroutines.CoroutineContext
 
 object Repository {
+    private fun <T> fire(
+        context: CoroutineContext = Dispatchers.IO,
+        block: suspend () -> Result<T>
+    ) =
+        liveData(context) {
+            val result = try {
+                block()
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+            emit(result)
+        }
+
+    private fun <T> fireSuccess(
+        context: CoroutineContext = Dispatchers.Default,
+        block: suspend () -> T
+    ) =
+        fire(context) {
+            Result.success(block())
+        }
+
     fun searchPlaces(query: String) = fire {
         val placeResponse = Network.searchPlaces(query)
         if (placeResponse.status == "ok") {
@@ -45,16 +68,9 @@ object Repository {
         }
     }
 
-    private fun <T> fire(
-        context: CoroutineContext = Dispatchers.IO,
-        block: suspend () -> Result<T>
-    ) =
-        liveData(context) {
-            val result = try {
-                block()
-            } catch (e: Exception) {
-                Result.failure<T>(e)
-            }
-            emit(result)
-        }
+    fun savePlace(place: PlaceResponse.Place) = PlaceDao.savePlace(place)
+
+    fun getSavedPlace() = PlaceDao.getSavedPlace()
+
+    fun isPlaceSaved(): Boolean = PlaceDao.isPlaceSaved()
 }

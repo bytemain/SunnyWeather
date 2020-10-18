@@ -1,5 +1,7 @@
 package me.lengthmin.sunnyweather.ui.weather
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,6 +22,18 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class WeatherActivity : AppCompatActivity() {
+    companion object {
+        val TAG = "WeatherActivity"
+        fun actionStart(context: Context, lng: String, lat: String, placeName: String) {
+            val intent = Intent(context, WeatherActivity::class.java).apply {
+                putExtra("location_lng", lng)
+                putExtra("location_lat", lat)
+                putExtra("place_name", placeName)
+            }
+            context.startActivity(intent)
+        }
+    }
+
     val viewModel by lazy { ViewModelProvider(this).get(WeatherViewModel::class.java) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,9 +41,6 @@ class WeatherActivity : AppCompatActivity() {
         window.statusBarColor = Color.TRANSPARENT
         window.decorView.systemUiVisibility =
             View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-//            window.setDecorFitsSystemWindows(false)
-        }
         setContentView(R.layout.activity_weather)
         val parentLayout: View = findViewById(android.R.id.content)
         if (viewModel.locationLng.isEmpty()) {

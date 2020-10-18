@@ -3,6 +3,7 @@ package me.lengthmin.sunnyweather.ui.place
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import me.lengthmin.sunnyweather.model.PlaceResponse
 import me.lengthmin.sunnyweather.model.PlaceResponse.Place
 import me.lengthmin.sunnyweather.repository.Repository
 
@@ -16,4 +17,8 @@ class PlaceViewModel : ViewModel() {
     fun searchPlaces(query: String) {
         searchLiveData.value = query
     }
+
+    fun savePlace(place: Place) = Repository.savePlace(place)
+    fun getSavedPlace() = Repository.getSavedPlace()
+    fun isPlaceSaved() = Repository.isPlaceSaved()
 }

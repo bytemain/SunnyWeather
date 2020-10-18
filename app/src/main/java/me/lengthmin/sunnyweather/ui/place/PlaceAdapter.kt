@@ -12,7 +12,7 @@ import me.lengthmin.sunnyweather.R
 import me.lengthmin.sunnyweather.model.PlaceResponse.Place
 import me.lengthmin.sunnyweather.ui.weather.WeatherActivity
 
-class PlaceAdapter(private val fragment: Fragment, private val placeList: List<Place>) :
+class PlaceAdapter(private val fragment: PlaceFragment, private val placeList: List<Place>) :
     RecyclerView.Adapter<PlaceAdapter.ViewHolder>() {
     companion object {
         val TAG = "PlaceAdapter"
@@ -29,16 +29,13 @@ class PlaceAdapter(private val fragment: Fragment, private val placeList: List<P
         viewHolder.itemView.setOnClickListener {
             val position = viewHolder.adapterPosition
             val place = placeList[position]
-            val intent = Intent(parent.context, WeatherActivity::class.java).apply {
-                putExtra("location_lng", place.location.lng)
-                putExtra("location_lat", place.location.lat)
-                putExtra("place_name", place.name)
-            }
-            Log.i(TAG, "location_lng: " + place.location.lng)
-            Log.i(TAG, "location_lat: " + place.location.lat)
-            Log.i(TAG, "place_name: " + place.name)
-
-            fragment.startActivity(intent)
+            fragment.viewModel.savePlace(place)
+            WeatherActivity.actionStart(
+                parent.context,
+                lng = place.location.lng,
+                lat = place.location.lat,
+                placeName = place.name
+            )
         }
         return viewHolder
     }
