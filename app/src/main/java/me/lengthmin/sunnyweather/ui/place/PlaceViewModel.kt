@@ -3,7 +3,7 @@ package me.lengthmin.sunnyweather.ui.place
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import me.lengthmin.sunnyweather.model.Place
+import me.lengthmin.sunnyweather.model.PlaceResponse.Place
 import me.lengthmin.sunnyweather.repository.Repository
 
 class PlaceViewModel : ViewModel() {
