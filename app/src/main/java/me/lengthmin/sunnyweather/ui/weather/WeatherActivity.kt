@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_weather.*
 import kotlinx.android.synthetic.main.forecast.*
+import kotlinx.android.synthetic.main.life_index.*
 import kotlinx.android.synthetic.main.now.*
 import me.lengthmin.sunnyweather.R
 import me.lengthmin.sunnyweather.model.Weather
@@ -83,6 +84,11 @@ class WeatherActivity : AppCompatActivity() {
             temperatureInfo.text = tempText
             forecastLayout.addView(view)
         }
+        val lifeIndex = daily.lifeIndex
+        coldRiskText.text = lifeIndex.coldRisk[0].desc
+        dressingText.text = lifeIndex.dressing[0].desc
+        ultravilotText.text = lifeIndex.ultraviolet[0].desc
+        carWashingText.text = lifeIndex.carWashing[0].desc
         weatherLayout.visibility = View.VISIBLE
     }
 }
