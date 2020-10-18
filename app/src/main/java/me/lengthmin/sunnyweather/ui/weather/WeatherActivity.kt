@@ -60,8 +60,18 @@ class WeatherActivity : AppCompatActivity() {
                 Snackbar.make(parentLayout, "无法获取天气信息~", Snackbar.LENGTH_SHORT).show()
                 it.exceptionOrNull()?.printStackTrace()
             }
+            swipeRefresh.isRefreshing = false
         })
+        swipeRefresh.setColorSchemeResources(R.color.colorPrimary)
+        refreshWeather()
+        swipeRefresh.setOnRefreshListener {
+            refreshWeather()
+        }
+    }
+
+    fun refreshWeather() {
         viewModel.refreshWeather()
+        swipeRefresh.isRefreshing = false
     }
 
     private fun showWeatherInfo(weather: Weather) {
