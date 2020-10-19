@@ -1,10 +1,49 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+/*
+* 部分打包的配置来源于：
+* 链接：https://juejin.im/post/6844903801657229325
+* 做了一些修改方便自用。
+*/
+// 定义打包时间
+static def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}
+// 读取签名配置
+def getSigningProperties() {
+    def propFile = file('../signing.properties')
+    if (propFile.exists() && propFile.canRead()) {
+        def props = new Properties()
+        props.load(new FileInputStream(propFile))
+        if (props.containsKey('STORE_FILE') && props.containsKey('STORE_PASS') &&
+                props.containsKey('KEY_ALIAS') && props.containsKey('KEY_PASS')) {
+            android.signingConfigs.release.storeFile = file(props['STORE_FILE'])
+            android.signingConfigs.release.storePassword = props['STORE_PASS']
+            android.signingConfigs.release.keyAlias = props['KEY_ALIAS']
+            android.signingConfigs.release.keyPassword = props['KEY_PASS']
+        } else {
+            println 'signing.properties are found but some entries are missed!'
+            android.buildTypes.release.signingConfig = null
+        }
+    } else {
+        println 'signing.properties are not found!'
+        android.buildTypes.release.signingConfig = null
+    }
+}
+
 
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
+    signingConfigs {
+        release {
+            storeFile
+            storePassword
+            keyAlias
+            keyPassword
+        }
+    }
 
     defaultConfig {
         applicationId "me.lengthmin.sunnyweather"
@@ -15,11 +54,26 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    // 读取签名配置
+    getSigningProperties()
     buildTypes {
         release {
-            minifyEnabled false
+            shrinkResources true
+            minifyEnabled true
+            zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            android.applicationVariants.all { variant ->
+                def suffix
+                if (variant.buildType.name == 'release') {
+                    suffix = 'release'
+                } else {
+                    suffix = 'debug'
+                }
+                variant.outputs.all {
+                    outputFileName = "app_${variant.name}-${variant.versionName}_${releaseTime()}.apk"
+                }
+            }
         }
     }
     compileOptions {
@@ -51,5 +105,4 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-
 }
