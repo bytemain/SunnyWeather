@@ -31,8 +31,10 @@ def getSigningProperties() {
         android.buildTypes.release.signingConfig = null
     }
 }
-
-
+// https://guides.codepath.com/android/Storing-Secret-Keys-in-Android
+def apiKeyPropertiesFile = file("../apikey.properties")
+def apiKeyProperties = new Properties()
+apiKeyProperties.load(new FileInputStream(apiKeyPropertiesFile))
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
@@ -53,6 +55,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "CYTOKEN", apiKeyProperties['CYTOKEN'])
     }
     // 读取签名配置
     getSigningProperties()
